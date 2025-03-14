@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Image Enhancement System</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body class="bg-[#09122C] text-white">
+    <!-- Header -->
+{% include 'navigation.html'%}
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-6 max-w-7xl">
+        <!-- Upload Section -->
+        <div class="bg-[rgba(255,255,255,0.1)] p-8 rounded-lg shadow-lg mb-8 text-center">
+            <h2 class="text-2xl font-bold mb-4">Upload a New Image</h2>
+            <a href="{% url 'upload_image'%}">
+                <label for="file-upload" class="bg-[#5C7285] text-white px-6 py-2 rounded-lg cursor-pointer hover:bg-[#09122C] transition duration-300">
+                    <i class="fas fa-upload"></i> Choose Image
+                </label>
+            </a>
+        </div>
+
+        <!-- Image Gallery -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for image in images %}
+                <div class="bg-[rgba(255,255,255,0.1)] rounded-lg overflow-hidden shadow-lg">
+                    <img src="{{ image.original_image.url }}" alt="Original Image" class="w-full h-48 object-cover">
+                    <div class="p-4 text-center">
+                        <p class="text-sm text-[#5C7285]">Uploaded: {{ image.uploaded_at|date:"F j, Y, g:i a" }}</p>
+                        {% if image.high_quality_image %}
+                            <img src="{{ image.high_quality_image.url }}" alt="Enhanced Image" class="w-full h-48 object-cover mt-4">
+                            <p class="text-sm text-[#5C7285] mt-2">Enhanced: {{ image.updated_at|date:"F j, Y, g:i a" }}</p>
+                            <!-- Buttons -->
+                            <div class="flex justify-center gap-2 mt-4">
+                                <!-- Download Button -->
+                                <a href="{{ image.high_quality_image.url }}" download class="bg-green-600 text-white px-2 py-1 hover:bg-green-700 transition duration-300">
+                                    <i class="fas fa-download"></i> Download
+                                </a>
+                                <!-- Delete Button -->
+                                <button
+                                    type="button"
+                                    class="bg-red-600 text-white px-2 py-1 hover:bg-red-700 transition duration-300 delete-button"
+                                    data-image-id="{{ image.id }}"
+                                >
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        {% else %}
+                            <p class="text-sm text-[#5C7285] mt-4">Processing...</p>
+                        {% endif %}
+                    </div>
+                    
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-[#5C7285] p-4 mt-8 text-center">
+        <p class="text-white">&copy; 2023 Image Enhancement System. All rights reserved.</p>
+    </footer>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Font Awesome JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add event listeners to all delete buttons
+            document.querySelectorAll('.delete-button').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const imageId = this.getAttribute('data-image-id');
+
+                    // SweetAlert2 confirmation dialog
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'You won\'t be able to revert this!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#5C7285',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Submit the delete form
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = `/delete/${imageId}/`;
+                            form.innerHTML = `{% csrf_token %}`;
+                            document.body.appendChild(form);
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

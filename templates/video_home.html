@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Video Enhancement System</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+</head>
+<body class="bg-[#09122C] text-white">
+    <!-- Header -->
+
+    {% include 'navigation.html'%}
+
+    <!-- Main Content -->
+    <div class="container mx-auto p-6 max-w-7xl">
+        <!-- Upload Section -->
+        <div class="bg-[rgba(255,255,255,0.1)] p-8 rounded-lg shadow-lg mb-8 text-center">
+            <h2 class="text-2xl font-bold mb-4">Upload a New Video</h2>
+            <a href="{% url 'upload_video' %}">
+                <label for="file-upload" class="bg-[#5C7285] text-white px-6 py-2 rounded-lg cursor-pointer hover:bg-[#09122C] transition duration-300">
+                    <i class="fas fa-upload"></i> Choose Video
+                </label>
+            </a>
+        </div>
+
+        <!-- Video Gallery -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {% for video in videos %}
+                <div class="bg-[rgba(255,255,255,0.1)] rounded-lg overflow-hidden shadow-lg">
+                    <video controls class="w-full h-48">
+                        <source src="{{ video.original_video.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="p-4 text-center">
+                        <p class="text-sm text-[#5C7285]">Uploaded: {{ video.uploaded_at|date:"F j, Y, g:i a" }}</p>
+                        {% if video.high_quality_video %}
+                            <video controls class="w-full h-48 mt-4">
+                                <source src="{{ video.high_quality_video.url }}" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <p class="text-sm text-[#5C7285] mt-2">Enhanced: {{ video.updated_at|date:"F j, Y, g:i a" }}</p>
+                            <!-- Download Button -->
+                            <a href="{{ video.high_quality_video.url }}" download class="bg-green-600 text-white px-2 py-1 hover:bg-green-700 transition duration-300 mt-4 inline-block">
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                        {% else %}
+                            <p class="text-sm text-[#5C7285] mt-4">Processing...</p>
+                        {% endif %}
+                        <!-- Delete Button -->
+                        <button
+                            type="button"
+                            class="bg-red-600 text-white px-2 py-1 hover:bg-red-700 transition duration-300 mt-4 delete-button"
+                            data-video-id="{{ video.id }}"
+                        >
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                    
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-[#5C7285] p-4 mt-8 text-center">
+        <p class="text-white">&copy; 2023 Video Enhancement System. All rights reserved.</p>
+    </footer>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Font Awesome JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add event listeners to all delete buttons
+            document.querySelectorAll('.delete-button').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const videoId = this.getAttribute('data-video-id');
+
+                    // SweetAlert2 confirmation dialog
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'You won\'t be able to revert this!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#5C7285',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Submit the delete form
+                            const form = document.createElement('form');
+                            form.method = 'POST';
+                            form.action = `/delete_video/${videoId}/`;
+                            form.innerHTML = `{% csrf_token %}`;
+                            document.body.appendChild(form);
+                            form.submit();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

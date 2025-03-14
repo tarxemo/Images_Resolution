@@ -1,0 +1,47 @@
+<!-- Display Messages -->
+{% if messages %}
+<div id="message-container" class="flex justify-center items-center">
+    <div class="mb-4 w-full max-w-md">
+        {% for message in messages %}
+            {% if 'success' in message.tags %}
+                <div class="bg-green-100 text-green-700 p-4 rounded-lg border border-green-500 mb-2 text-center">
+                    {{ message }}
+                </div>
+            {% elif 'warning' in message.tags %}
+                <div class="bg-yellow-100 text-yellow-700 p-4 rounded-lg border border-yellow-500 mb-2 text-center">
+                    {{ message }}
+                </div>
+            {% elif 'error' in message.tags %}
+                <div class="bg-red-100 text-red-700 p-4 rounded-lg border border-red-500 mb-2 text-center">
+                    {{ message }}
+                </div>
+            {% elif 'info' in message.tags %}
+                <div class="bg-blue-100 text-blue-700 p-4 rounded-lg border border-blue-500 mb-2 text-center">
+                    {{ message }}
+                </div>
+            {% else %}
+                <div class="bg-gray-100 text-gray-700 p-4 rounded-lg border border-gray-500 mb-2 text-center">
+                    {{ message }}
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+<!-- JavaScript to hide the messages after 5 seconds -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const messageContainer = document.getElementById('message-container');
+        if (messageContainer) {
+            setTimeout(() => {
+                messageContainer.style.transition = "opacity 0.5s ease";
+                messageContainer.style.opacity = "0";
+
+                setTimeout(() => {
+                    messageContainer.remove();
+                }, 500); // Remove the element after the fade-out transition
+            }, 5000); // Wait 5 seconds before starting the fade-out
+        }
+    });
+</script>
+{% endif %}

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Uploader</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-[#09122C] text-white">
+    <!-- Main Container -->
+    <div class="min-h-screen flex flex-col items-center justify-center p-4">
+        {% include 'navigation.html'%}
+        <!-- Back to Home Link -->
+        <a href="{% url 'home' %}" class="text-[#5C7285] hover:text-white mb-6 transition duration-300">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+
+        <!-- Upload Container -->
+        <div class="bg-[rgba(255,255,255,0.1)] p-8 rounded-lg shadow-lg w-full max-w-md text-center">
+            <h1 class="text-2xl font-bold mb-6">Video Uploader</h1>
+
+            <!-- Upload Box -->
+            <div
+                id="uploadBox"
+                class="border-2 border-dashed border-[#5C7285] p-6 rounded-lg cursor-pointer hover:border-white transition duration-300"
+            >
+                <i class="fas fa-cloud-upload-alt text-4xl text-[#5C7285] mb-4"></i>
+                <p class="text-[#5C7285]">Drag & Drop or Click to Upload</p>
+            </div>
+
+            <!-- File Input -->
+            <input type="file" id="fileInput" accept="video/*" class="hidden">
+
+            <!-- Preview Video -->
+            <video id="preview" class="w-full h-48 object-cover mt-6 rounded-lg hidden" controls>
+                <source id="previewSource" src="#" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+
+            <!-- Upload Button -->
+            <button
+                id="uploadButton"
+                class="bg-[#5C7285] text-white px-6 py-2 rounded-lg mt-6 hover:bg-[#09122C] transition duration-300 hidden"
+            >
+                Upload Video
+            </button>
+
+            <!-- Loading Spinner -->
+            <div id="loading" class="mt-6 hidden">
+                <i class="fas fa-spinner fa-spin text-2xl text-[#5C7285]"></i>
+                <p class="mt-2 text-[#5C7285]">Uploading...</p>
+            </div>
+        </div>
+
+        <!-- Videos Container -->
+        <div id="videosContainer" class="w-full mt-8 hidden">
+            <div class="grid grid-cols-2 gap-4 w-full">
+                <!-- Original Video -->
+                <div class="bg-[rgba(255,255,255,0.1)] p-4 rounded-lg">
+                    <video id="originalVideo" class="w-full h-128 object-cover rounded-lg" controls>
+                        <source id="originalVideoSource" src="#" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <p class="mt-2 text-[#5C7285] text-sm text-center">Original Video</p>
+                </div>
+
+                <!-- Enhanced Video -->
+                <div class="bg-[rgba(255,255,255,0.1)] p-4 rounded-lg">
+                    <video id="enhancedVideo" class="w-full h-128 object-cover rounded-lg" controls>
+                        <source id="enhancedVideoSource" src="#" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <p class="mt-2 text-[#5C7285] text-sm text-center">Enhanced Video</p>
+                    <!-- Download Link -->
+                    <a
+                        id="downloadLink"
+                        href="#"
+                        download="enhanced_video.mp4"
+                        class="bg-[#5C7285] text-white px-4 py-2 rounded-lg mt-2 inline-block hover:bg-[#09122C] transition duration-300"
+                    >
+                        <i class="fas fa-download"></i> Download Video
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const uploadBox = $('#uploadBox');
+            const fileInput = $('#fileInput');
+            const preview = $('#preview');
+            const previewSource = $('#previewSource');
+            const uploadButton = $('#uploadButton');
+            const loading = $('#loading');
+            const videosContainer = $('#videosContainer');
+            const originalVideo = $('#originalVideo');
+            const originalVideoSource = $('#originalVideoSource');
+            const enhancedVideo = $('#enhancedVideo');
+            const enhancedVideoSource = $('#enhancedVideoSource');
+            const downloadLink = $('#downloadLink');
+
+            // Click to upload
+            uploadBox.on('click', function() {
+                fileInput.click();
+            });
+
+            // File input change
+            fileInput.on('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const url = URL.createObjectURL(file);
+                    previewSource.attr('src', url);
+                    preview[0].load();
+                    preview.removeClass('hidden');
+                    uploadButton.removeClass('hidden');
+                }
+            });
+
+            // Drag and drop
+            uploadBox.on('dragover', function(event) {
+                event.preventDefault();
+                uploadBox.addClass('border-white');
+            });
+
+            uploadBox.on('dragleave', function(event) {
+                event.preventDefault();
+                uploadBox.removeClass('border-white');
+            });
+
+            uploadBox.on('drop', function(event) {
+                event.preventDefault();
+                uploadBox.removeClass('border-white');
+                const file = event.originalEvent.dataTransfer.files[0];
+                if (file) {
+                    const url = URL.createObjectURL(file);
+                    previewSource.attr('src', url);
+                    preview[0].load();
+                    preview.removeClass('hidden');
+                    uploadButton.removeClass('hidden');
+                    fileInput[0].files = event.originalEvent.dataTransfer.files;
+                }
+            });
+
+            // Upload button click
+            uploadButton.on('click', function() {
+                const file = fileInput[0].files[0];
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('original_video', file);
+
+                    loading.removeClass('hidden');
+                    uploadButton.addClass('hidden');
+
+                    $.ajax({
+                        url: '{% url "upload_video" %}',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function(response) {
+                            loading.addClass('hidden');
+                            videosContainer.removeClass('hidden');
+                            originalVideoSource.attr('src', response.original_video_url);
+                            originalVideo[0].load();
+                            enhancedVideoSource.attr('src', response.high_quality_video_url);
+                            enhancedVideo[0].load();
+
+                            // Set the download link
+                            downloadLink.attr('href', response.high_quality_video_url);
+                        },
+                        error: function() {
+                            loading.addClass('hidden');
+                            alert('Upload failed. Please try again.');
+                            uploadButton.removeClass('hidden');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

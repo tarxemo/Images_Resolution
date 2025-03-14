@@ -1,0 +1,26 @@
+<header class="bg-[#5C7285] p-4 flex justify-between items-center shadow-lg">
+    <h1 class="text-xl font-bold">Image Enhancement System</h1>
+    <nav class="flex gap-4">
+        <a href="{% url 'upload_video' %}" class="text-white px-4 py-2 rounded-lg hover:bg-white hover:text-[#5C7285] transition duration-300">
+            Upload Video
+        </a>
+        <a href="{% url 'upload_image' %}" class="text-white px-4 py-2 rounded-lg hover:bg-white hover:text-[#5C7285] transition duration-300">
+            Upload Image
+        </a>
+        <a href="{% url 'video_home_view' %}" class="text-white px-4 py-2 rounded-lg hover:bg-white hover:text-[#5C7285] transition duration-300">
+            Video Home
+        </a>
+        <a href="{% url 'home' %}" class="text-white px-4 py-2 rounded-lg hover:bg-white hover:text-[#5C7285] transition duration-300">
+            Image Home
+        </a>
+        <form action="{% url 'logout' %}" method="post" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="bg-[#09122C] text-white px-4 py-2 rounded-lg hover:bg-white hover:text-[#09122C] transition duration-300">
+                Logout
+            </button>
+        </form>
+    </nav>
+</header>
+<div class="absolute top-32 z-20">
+    {% include 'error.html'%}
+</div>

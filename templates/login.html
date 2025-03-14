@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Image Enhancement System</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-[#09122C] text-white flex items-center justify-center min-h-screen">
+    <!-- Login Container -->
+    <div class="bg-[rgba(255,255,255,0.1)] p-8 rounded-lg shadow-lg w-full max-w-md text-center animate-fade-in">
+        <h2 class="text-2xl font-bold mb-6">Login to Image Enhancement System</h2>
+
+        <!-- Display Messages -->
+        {% include 'error.html'%}
+
+        <!-- Login Form -->
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <!-- Username Field -->
+            <div class="relative mb-4">
+                <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-[#5C7285]"></i>
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Username"
+                    class="w-full pl-10 pr-4 py-2 bg-[rgba(255,255,255,0.1)] border border-[#5C7285] rounded-lg text-white placeholder-[#5C7285] focus:outline-none focus:border-white"
+                    required
+                />
+            </div>
+
+            <!-- Password Field -->
+            <div class="relative mb-6">
+                <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-[#5C7285]"></i>
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    class="w-full pl-10 pr-4 py-2 bg-[rgba(255,255,255,0.1)] border border-[#5C7285] rounded-lg text-white placeholder-[#5C7285] focus:outline-none focus:border-white"
+                    required
+                />
+            </div>
+
+            <!-- Login Button -->
+            <button
+                type="submit"
+                class="w-full bg-[#5C7285] text-white py-2 rounded-lg hover:bg-[#09122C] transition duration-300"
+            >
+                Login
+            </button>
+        </form>
+
+        <!-- Register Link -->
+        <div class="mt-4 text-[#5C7285]">
+            Don't have an account? 
+            <a href="{% url 'register' %}" class="text-white hover:text-[#5C7285] transition duration-300">
+                Register here
+            </a>
+        </div>
+    </div>
+
+    <!-- Font Awesome JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
+
+    <!-- Custom Animation -->
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+    </style>
+</body>
+</html>

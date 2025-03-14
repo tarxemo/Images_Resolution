@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Enhancement System</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white">
+    <!-- Hero Section -->
+    <section class="bg-gray-800 py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-5xl font-bold mb-6">Enhance Your Images with AI</h1>
+            <p class="text-xl mb-8">Transform low-quality images into high-resolution masterpieces with our advanced image enhancement system.</p>
+            <div class="space-x-4">
+                <a href="{% url 'login' %}" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition duration-300">Login</a>
+                <a href="{% url 'register' %}" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg text-lg font-semibold transition duration-300">Register</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">Key Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-gray-800 p-8 rounded-lg text-center">
+                    <div class="text-4xl mb-4">🖼️</div>
+                    <h3 class="text-2xl font-bold mb-4">High-Quality Enhancements</h3>
+                    <p class="text-gray-400">Turn low-resolution images into high-quality, detailed masterpieces.</p>
+                </div>
+                <!-- Feature 2 -->
+                <div class="bg-gray-800 p-8 rounded-lg text-center">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <h3 class="text-2xl font-bold mb-4">Fast Processing</h3>
+                    <p class="text-gray-400">Get enhanced images in seconds with our lightning-fast AI algorithms.</p>
+                </div>
+                <!-- Feature 3 -->
+                <div class="bg-gray-800 p-8 rounded-lg text-center">
+                    <div class="text-4xl mb-4">🔒</div>
+                    <h3 class="text-2xl font-bold mb-4">Secure & Private</h3>
+                    <p class="text-gray-400">Your images are processed securely and never shared with third parties.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="bg-gray-800 py-20">
+        <div class="container mx-auto px-6">
+            <h2 class="text-4xl font-bold text-center mb-12">How It Works</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="text-center">
+                    <div class="text-4xl mb-4">1</div>
+                    <h3 class="text-2xl font-bold mb-4">Upload Your Image</h3>
+                    <p class="text-gray-400">Upload a low-quality image from your device.</p>
+                </div>
+                <!-- Step 2 -->
+                <div class="text-center">
+                    <div class="text-4xl mb-4">2</div>
+                    <h3 class="text-2xl font-bold mb-4">Enhance Automatically</h3>
+                    <p class="text-gray-400">Our AI system processes the image to enhance its quality.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="text-center">
+                    <div class="text-4xl mb-4">3</div>
+                    <h3 class="text-2xl font-bold mb-4">Download the Result</h3>
+                    <p class="text-gray-400">Download the high-quality version of your image.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 py-10">
+        <div class="container mx-auto px-6 text-center">
+            <p class="text-gray-400">&copy; 2023 Image Enhancement System. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
