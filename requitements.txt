@@ -1,2 +1,7 @@
 Django
+opencv-python
+pillow
+numpy
+moviepy
+scikit-image
 # add others here
